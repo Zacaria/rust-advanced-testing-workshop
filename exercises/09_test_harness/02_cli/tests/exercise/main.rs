@@ -1,11 +1,14 @@
-use libtest_mimic::{Failed, Trial};
+use libtest_mimic::{Arguments, Failed, Trial};
 
 mod tests;
 
 fn main() {
-    let args = todo!();
-    let tests = vec![Trial::test("happy_test", runner(tests::happy_test))];
-    libtest_mimic::run(args, tests).exit()
+    let args = Arguments::from_args();
+    let tests = vec![
+        Trial::test("happy_test", runner(tests::happy_test)),
+        Trial::test("sad_test", runner(tests::sad_test)),
+    ];
+    libtest_mimic::run(&args, tests).exit()
 }
 
 // A test, for `libtest_mimic`, is a function with no arguments that returns a `Result<(), Failed>`.

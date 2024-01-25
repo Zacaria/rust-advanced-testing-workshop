@@ -1,10 +1,14 @@
+use wiremock::matchers::{body_json_schema, header, method};
 use wiremock::{Match, Request};
 
 struct WellFormedJson;
 
 impl Match for WellFormedJson {
     fn matches(&self, request: &Request) -> bool {
-        todo!("Implement me!")
+        method("POST").matches(request)
+            && header("Content-Type", "application/json").matches(request)
+            && header("Content-Length", request.body.len()).matches(request)
+            && body_json_schema::<serde_json::Value>(request)
     }
 }
 

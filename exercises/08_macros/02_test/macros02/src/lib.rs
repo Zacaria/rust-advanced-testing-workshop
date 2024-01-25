@@ -1,10 +1,10 @@
 use proc_macro::TokenStream;
-use quote::ToTokens;
+use quote::{quote, ToTokens};
 use syn::{Attribute, ItemFn};
 
 #[proc_macro_attribute]
 pub fn vanilla_test(_args: TokenStream, input: TokenStream) -> TokenStream {
-    let mut test_fn: ItemFn = todo!("Use syn");
+    let mut test_fn: ItemFn = syn::parse_macro_input!(input as ItemFn);
     if test_fn
         .attrs
         .iter()
@@ -13,11 +13,17 @@ pub fn vanilla_test(_args: TokenStream, input: TokenStream) -> TokenStream {
     {
         test_fn.to_token_stream()
     } else {
-        todo!("Use quote");
+        quote! {
+            #[test]
+            #test_fn
+        }
     }
     .into()
 }
 
 fn is_test_attribute(attr: &Attribute) -> bool {
-    todo!()
+    let Some(segment) = attr.path().segments.last() else {
+        return false;
+    };
+    segment.ident == "test"
 }

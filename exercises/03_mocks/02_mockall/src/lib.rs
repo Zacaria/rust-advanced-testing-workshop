@@ -1,3 +1,5 @@
+use mockall::automock;
+
 pub fn square<L>(x: i32, logger: L) -> i32
 where
     L: Logger,
@@ -7,6 +9,7 @@ where
     y
 }
 
+#[automock]
 pub trait Logger {
     fn log(&self, msg: &str);
 }
@@ -21,13 +24,14 @@ impl Logger for PrintlnLogger {
 
 #[cfg(test)]
 mod tests {
-    use super::square;
+    use super::{square, MockLogger};
     use googletest::assert_that;
     use googletest::matchers::eq;
 
     #[test]
     fn square_works() {
-        let mock_logger = todo!();
+        let mut mock_logger = MockLogger::new();
+        mock_logger.expect_log().return_const(());
         assert_eq!(square(2, mock_logger), 4);
     }
 }
