@@ -1,7 +1,13 @@
 use std::str::FromStr;
+// Use `mock!` to generate a mock type named `MockParsed` that implements the `FromStr` trait from the standard library.
 
 mockall::mock! {
-    // TODO!
+    pub Parsed {}
+    impl FromStr for Parsed {
+
+        type Err = String;
+        fn from_str(s: &str) -> Result<Self, <MockParsed as std::str::FromStr>::Err>;
+    }
 }
 
 #[cfg(test)]
