@@ -27,14 +27,15 @@ mod tests {
     use cargo_manifest::{Manifest, Package, Workspace};
     use googletest::expect_that;
     use googletest::matchers::{eq, len};
+    use std::fs;
     use std::path::{Path, PathBuf};
     use tempfile::TempDir;
 
     #[googletest::test]
     fn happy_path() {
         // Arrange
-        let workspace_root = todo!();
-        let workspace_root_path = todo!();
+        let workspace_root = TempDir::new().expect("Failed to create temporary directory");
+        let workspace_root_path = workspace_root.path();
 
         let workspace_manifest = Manifest {
             workspace: Some(Workspace {
@@ -63,10 +64,23 @@ mod tests {
     }
 
     fn save_member_manifest(m: Manifest, workspace_root: &Path) {
-        todo!()
+        let name = m.package.as_ref().unwrap().name.clone();
+        let path = workspace_root.join(&name).join("Cargo.toml");
+        dbg!(path);
+
+        fs::create_dir_all(workspace_root.join(&name)).expect("Failed to create directory");
+        fs::write(
+            workspace_root.join(name).join("Cargo.toml"),
+            toml::to_string_pretty::<Manifest>(&m).unwrap(),
+        )
+        .expect("Failed to write manifest");
     }
 
     fn save_workspace_manifest(m: Manifest, workspace_root: &Path) {
-        todo!()
+        fs::write(
+            workspace_root.join("Cargo.toml"),
+            toml::to_string_pretty::<Manifest>(&m).unwrap(),
+        )
+        .expect("Failed to write manifest");
     }
 }
