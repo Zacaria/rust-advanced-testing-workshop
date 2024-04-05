@@ -20,6 +20,15 @@ executed automatically. We are not quite there yet, though, so for now you'll ha
 cargo r --bin db_launcher
 ```
 
+On macos with docker desktop you might need to setup the current docker host
+```bash
+docker context list
+```
+
+```bash
+export DOCKER_HOST=unix://...
+```
+
 ## Configuring `sqlx`
 
 For this section, we'll be using [`sqlx`](https://crates.io/crates/sqlx) to interact with PostgreSQL.  

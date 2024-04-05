@@ -4,13 +4,13 @@ mod tests {
     use googletest::matchers::eq;
     use sqlx::PgPool;
 
-    #[tokio::test]
-    async fn insert() {
+    #[sqlx::test]
+    async fn insert(pool: PgPool) {
         // Load .env file if available.
-        dotenvy::dotenv().ok();
-        let connection_string = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+        // dotenvy::dotenv().ok();
+        // let connection_string = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-        let pool = PgPool::connect(&connection_string).await.unwrap();
+        // let pool = PgPool::connect(&connection_string).await.unwrap();
         sqlx::query!("INSERT INTO users (id, name) VALUES ($1, $2)", 1, "Alice")
             .execute(&pool)
             .await
