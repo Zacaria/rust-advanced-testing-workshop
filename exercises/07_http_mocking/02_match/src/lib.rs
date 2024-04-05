@@ -1,10 +1,20 @@
-use wiremock::{Match, Request};
+use std::io::Read;
+
+use serde_json::Value;
+use wiremock::{
+    http::Method,
+    matchers::{any, body_bytes, body_json, header, method},
+    Match, Request,
+};
 
 struct WellFormedJson;
 
 impl Match for WellFormedJson {
     fn matches(&self, request: &Request) -> bool {
-        todo!("Implement me!")
+        method(Method::POST).matches(request)
+            && header("Content-Type", "application/json").matches(request)
+            && request.body_json::<Value>().is_ok()
+            && header("Content-Length", request.body.len()).matches(request)
     }
 }
 
